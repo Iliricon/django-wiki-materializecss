@@ -32,14 +32,20 @@
                     <li>
                         <a href="{% url 'wiki:create' path=urlpath.parent.path %}"
                            style="padding: 7px;">
-                            <i class="material-icons left">add_circle</i>{% trans "New article next to this one" %}</a>
+                            <i class="material-icons left">add_circle</i>{% trans "New article next to this one" %}
+                        </a>
                     </li>
                 {% endif %}
                 <li>
                     <a href="{% url 'wiki:create' path=urlpath.parent.path %}"
                        style="padding: 7px;">
-                        <i class="material-icons left">add_circle</i>{% trans "New article next to this one" %}</a>
+                        <i class="material-icons left">add_circle</i>{% trans "New article next to this one" %}
+                    </a>
                 </li>
+            </ul>
+
+            <ul id="article-menu" class="dropdown-content">
+                {% include "wiki/includes/article_menu.html" %}
             </ul>
 
             <div class="nav-wrapper blue-grey darken-1">
@@ -53,18 +59,30 @@
                         <a class="breadcrumb">{{ article.current_revision.title|truncatechars:25 }}</a>
                     </div>
                     <ul>
-                        <li class="col s2 offset-s2">
+                        <li class="col s2 offset">
                             <div class="dropdown">
-                                <a class="dropdown-button" data-beloworigin="true"
+                                <a class="dropdown-button"
+                                   data-beloworigin="true"
                                    data-activates="breadcrumb-menu1">
-                                    <i class="material-icons left">view_compact</i>View subitems</a>
+                                    <i class="material-icons left">view_compact</i>View
+                                    subitems</a>
                             </div>
                         </li>
                         <li class="col s2">
                             <div class="dropdown">
-                                <a class="dropdown-button" data-beloworigin="true"
+                                <a class="dropdown-button"
+                                   data-beloworigin="true"
                                    data-activates="breadcrumb-menu2">
-                                    <i class="material-icons left">view_compact</i>Create new articles</a>
+                                    <i class="material-icons left">create</i>Create
+                                    new articles</a>
+                            </div>
+                        </li>
+                        <li class="col s2">
+                            <div class="dropdown">
+                                <a class="dropdown-button"
+                                   data-beloworigin="true"
+                                   data-activates="article-menu">
+                                    <i class="material-icons left">settings</i>Menu</a>
                             </div>
                         </li>
                     </ul>
