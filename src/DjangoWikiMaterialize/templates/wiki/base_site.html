@@ -1,151 +1,181 @@
 {% load sekizai_tags i18n wiki_tags static %}<!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
-    <title>{% block wiki_pagetitle %}{% endblock %}{% block wiki_site_title %} - django-\/\/  i K |{% endblock %}</title>
+    <title>{% block wiki_pagetitle %}{% endblock %}
+        {% block wiki_site_title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="author" content="www.django-wiki.org">
 
     <!-- Le styles -->
-    <link href="{% static "wiki/bootstrap/css/wiki-bootstrap.min.css" %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          rel="stylesheet">
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript"
+            src="{% static "materialize-css/dist/js/materialize.min.js" %}"></script>
+    <link rel="stylesheet"
+          href="{% static "materialize-css/dist/css/materialize.min.css" %}">
 
     {% render_block "css" %}
+
+    <script type="text/javascript">
+        $(document).ready(
+            $(".dropdown-button").dropdown();
+        )
+    </script>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-  </head>
+</head>
 
-  <body>
+<body>
 
-    {% block wiki_body %}
+{% block wiki_body %}
 
     {% block wiki_navbar %}
-    <div class="navbar navbar-fixed-top navbar-inverse">
-      <div class="container">
-        <div class="navbar-header">
-          <!-- .navbar-toggle is used as the toggle for collapsed navbar content -->
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          {% block wiki_header_branding %}
-          <a class="navbar-brand" href="{% url 'wiki:root' %}">django-\/\/ i K |</a>
-          {% endblock %}
-        </div>
-        <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" id="wiki-search-form" method="GET" action="{% url 'wiki:search' %}">
-            <div class="input-group">
-              <input type="search" class="form-control search-query" name="q" placeholder="{% trans "Search..." %}" />
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="submit">
-                  <span class="fa fa-search"></span>
-                </button>
-              </span>
-            </div><!-- /input-group -->
-          </form>
-          <div class="navbar-right">
-            {% if user.is_authenticated %}
-            <ul class="nav navbar-nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  <span class="badge notification-cnt">0</span>
-                  {{ user }}
-                  <b class="caret"></b>
-                </a>
-                <ul class="dropdown-menu">
-                  {% if "ACCOUNT_HANDLING"|wiki_settings %}
-                  <li>
-                    <a href="{% url 'wiki:profile_update' %}">
-                      <i class="fa fa-gear"></i>
-                      {% trans "Account Settings" %}
-                    </a>
-                  </li>
-                  <li>
-                    <a href="{% url 'wiki:logout' %}">
-                      <i class="fa fa-power-off"></i>
-                      {% trans "Log out" %}
-                    </a>
-                  </li>
-                  {% endif %}
-                  {% if user.is_superuser %}
-                  <li>
-                    <a href="{% url 'wiki:deleted_list' %}">
-                      <i class="fa fa-trash-o"></i>
-                      {% trans "Deleted articles" %}
-                    </a>
-                  </li>
-                  {% endif %}
-                  {% if "wiki.plugins.notifications"|plugin_enabled %}
+        <div class="navbar-fixed">
+            <ul id="dropdown-menu" class="dropdown-content">
+                {% if "ACCOUNT_HANDLING"|wiki_settings %}
+                    <li>
+                        <a href="{% url 'wiki:profile_update' %}">
+                            <i class="material-icons left">settings</i>
+                            {% trans "Account Settings" %}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'wiki:logout' %}">
+                            <i class="material-icons left">power_settings_new </i>{% trans "Log out" %}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url 'wiki:deleted_list' %}">
+                            <i class="material-icons left">delete</i>{% trans "Deleted articles" %}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if "wiki.plugins.notifications"|plugin_enabled %}
                     {% include "wiki/plugins/notifications/menubaritem.html" %}
-                  {% endif %}
-                  {% if "wiki.plugins.globalhistory"|plugin_enabled %}
+                {% endif %}
+                {% if "wiki.plugins.globalhistory"|plugin_enabled %}
                     {% include "wiki/plugins/globalhistory/menubaritem.html" %}
-                  {% endif %}
-                </ul>
-              </li>
+                {% endif %}
             </ul>
-            {% else %}
-            <ul class="nav navbar-nav">
-              <li>
-                <a href="{% login_url as wiki_login_url %}{{ wiki_login_url }}">{% trans "Log in" %}</a>
-              </li>
-              {% if "ACCOUNT_HANDLING"|wiki_settings %}
-              <li>
-                <a href="{% url 'wiki:signup' %}">{% trans "Sign up" %}</a>
-              </li>
-              {% endif %}
-            </ul>
-            {% endif %}
-          </div>
-          {% block wiki_header_navlinks %}
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">{% trans "Home" %}</a></li>
-            <li><a href="https://github.com/django-wiki/django-wiki" target="_blank">{% trans "About" %}</a></li>
-          </ul>
-          {% endblock %}
+
+            <nav>
+                <div class="nav-wrapper blue-grey darken-1">
+                    <div class="row">
+                        <div class="col s3">
+                            {% block wiki_header_branding %}
+                                <a class="brand-logo"
+                                   href="{% url 'wiki:root' %}">django-wiki-material</a>
+                            {% endblock %}
+
+                        </div>
+                        <a href="#" data-activates="mobile-demo"
+                           class="button-collapse"><i class="material-icons">menu</i></a>
+
+                        <ul class="hide-on-med-and-down">
+                            <li class="col s3 offset-s2">
+                                <form id="wiki-search-form" method="GET"
+                                      action="{% url 'wiki:search' %}">
+                                    <div class="input-field">
+                                        <input id="search" type="search"
+                                               name="q"
+                                               placeholder="{% trans "Search..." %}"
+                                               required
+                                               style="height: 64px !important;">
+                                        <label class="label-icon"
+                                               for="search"><i
+                                                class="material-icons">search</i></label>
+                                        <i class="material-icons">close</i>
+                                    </div>
+                                </form>
+                            </li>
+                            {% if user.is_authenticated %}
+                                <li class="dropdown col s2">
+                                    <a href="#"
+                                       class="dropdown-button"
+                                       data-beloworigin="true"
+                                       data-activates="dropdown-menu">
+                                        {{ user }} <span
+                                            class="new badge">0</span></a>
+                                </li>
+                            {% else %}
+                                <li class="col s1">
+                                    <a href="
+
+
+                                            {% login_url as wiki_login_url %}{{ wiki_login_url }}">{% trans "Log in" %}</a>
+                                </li>
+                                {% if "ACCOUNT_HANDLING"|wiki_settings %}
+                                    <li class="col s1">
+                                        <a href="{% url 'wiki:signup' %}">{% trans "Sign up" %}</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            {% block wiki_header_navlinks %}
+                                <li class="active col s1"><a
+                                        href="/">{% trans "Home" %}</a>
+                                </li>
+                                <li class="col s1">
+                                    <a href="https://github.com/django-wiki/django-wiki"
+                                       target="_blank">{% trans "About" %}</a>
+                                </li>
+                            {% endblock %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
-      </div>
-    </div>
     {% endblock %}
+    <!-- Reserved for breadcrumbs -->
+
+    {% block wiki_breadcrumbs %}{% endblock %}
 
     <div class="container" style="margin-top: 60px;">
 
-      {% wiki_messages %}
 
-      <!-- Reserved for breadcrumbs -->
-      {% block wiki_breadcrumbs %}{% endblock %}
+        <!-- Main page contents go here -->
+        {% block wiki_contents %}{% endblock %}
 
-      <!-- Main page contents go here -->
-      {% block wiki_contents %}{% endblock %}
+        <footer class="page-footer white">
+            <div class="container">
+                <div class="row">
+                    {% block wiki_footer_logo %}
+                        <a href="https://github.com/django-wiki/django-wiki"
+                           class="right"><img
+                                src="{% static "wiki/img/github_icon.png" %}"/></a>
+                    {% endblock %}
+                    {% block wiki_footer_prepend %}
+                    {% endblock %}
+                    <p style="color: black">{% blocktrans %}Powered by
+                        <a href="http://www.django-wiki.org">django-wiki</a>,
+                        an open
+                        source application under the
+                        <a href="http://www.gnu.org/licenses/quick-guide-gplv3.html">GPLv3</a>
+                        license. Let knowledge be the cure.{% endblocktrans %}
+                    </p>
+                    <div style="clear: both"></div>
 
-      <footer id="wiki-footer">
-        <hr />
-        {% block wiki_footer_logo %}
-        <a href="https://github.com/django-wiki/django-wiki" class="pull-right"><img src="{% static "wiki/img/github_icon.png" %}" /></a>
-        {% endblock %}
-        {% block wiki_footer_prepend %}
-        {% endblock %}
-        <p>{% blocktrans %}Powered by <a href="http://www.django-wiki.org">django-wiki</a>, an open source application under the <a href="http://www.gnu.org/licenses/quick-guide-gplv3.html">GPLv3</a> license. Let knowledge be the cure.{% endblocktrans %}</p>
-        <div style="clear: both"></div>
-      </footer>
-      </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
 
     </div> <!-- /container -->
 
-    {% endblock %}
+{% endblock %}
 
-    <script src="{% static "wiki/js/jquery.min.js" %}"></script>
-    <script src="{% static "wiki/js/core.js" %}"></script>
-    <script src="{% static "wiki/bootstrap/js/bootstrap.min.js" %}"></script>
-    <!-- Optionally enable responsive features in IE8 -->
-    <script src="{% static "wiki/js/respond.min.js" %}"></script>
-    {% render_block "js" %}
+{% render_block "js" %}
 
-  </body>
+</body>
 </html>
